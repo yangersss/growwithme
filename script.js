@@ -3,7 +3,7 @@ let totalOxygen = 0;  // Initialize totalOxygen
 let tasks = [];
 
 // -----------------------------
-// Initialization and Utilities
+// Utilities
 // -----------------------------
 
 function formatNumber(num) {
@@ -12,6 +12,10 @@ function formatNumber(num) {
     if (num < 1e12) return (num / 1e9).toFixed(2) + ' billion';
     if (num < 1e15) return (num / 1e12).toFixed(2) + ' trillion';
     return num.toLocaleString();
+}
+
+function setInnerText(id, text) {
+    document.getElementById(id).textContent = text;
 }
 
 function updateSeedCount() {
@@ -30,36 +34,96 @@ function updateOxygenCount() {
 // Local Storage Operations
 // -----------------------------
 
-function saveTasksToLocalStorage() {
+function saveToLocalStorage() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
     localStorage.setItem('totalSeeds', totalSeeds.toString());
-    localStorage.setItem('totalOxygen', totalOxygen.toString());  // Save totalOxygen
+    localStorage.setItem('totalOxygen', totalOxygen.toString());
+    localStorage.setItem('factories', JSON.stringify(factories));
+    localStorage.setItem('plants', JSON.stringify(plants));
+
 }
 
-function loadTasksFromLocalStorage() {
+function loadFromLocalStorage() {
     const storedTasks = localStorage.getItem('tasks');
     const storedSeeds = localStorage.getItem('totalSeeds');
-    const storedOxygen = localStorage.getItem('totalOxygen');  // Load storedOxygen
+    const storedOxygen = localStorage.getItem('totalOxygen');
 
-    if (storedTasks !== null) {
-        tasks = JSON.parse(storedTasks);
-        tasks.forEach(task => {
+    if (storedTasks) {
+        const parsedTasks = JSON.parse(storedTasks);
+        tasks.push(...parsedTasks);
+        parsedTasks.forEach(task => {
             addTaskToList(task.text, task.seeds, task.checked, false);
-            if (task.checked) {
-                totalSeeds += parseInt(task.seeds);
-            }
+            if (task.checked) totalSeeds += parseInt(task.seeds);
         });
     }
 
-    if (storedSeeds !== null) {
-        totalSeeds = parseInt(storedSeeds);
-    }
-    if (storedOxygen !== null) {
-        totalOxygen = parseInt(storedOxygen);
-    }
+    if (storedSeeds) totalSeeds = parseInt(storedSeeds);
+    if (storedOxygen) totalOxygen = parseInt(storedOxygen);
 
     updateOxygenCount();
+    
+    // Load factories
+    const storedFactories = localStorage.getItem('factories');
+    if (storedFactories) {
+        const parsedFactories = JSON.parse(storedFactories);
+        for (let i = 0; i < factories.length; i++) {
+            factories[i].owned = parsedFactories[i].owned;
+            factories[i].oxygenCost = parsedFactories[i].oxygenCost;
+        }
+    }
+
+    // Load plants
+    const storedPlants = localStorage.getItem('plants');
+    if (storedPlants) {
+        const parsedPlants = JSON.parse(storedPlants);
+        for (let i = 0; i < plants.length; i++) {
+            plants[i].purchased = parsedPlants[i].purchased;
+        }
+    }
 }
+
+// -----------------------------
+// Debug Operations
+// -----------------------------
+
+function gameReset() {
+    totalSeeds = 0;
+    totalOxygen = 0;
+
+    // Resetting factories
+    factories.forEach(factory => {
+        factory.owned = 0;
+        factory.oxygenCost = factory.baseOxygenCost;
+    });
+
+    plants.forEach(plant => plant.purchased = false);
+
+    // Clear out shop and factories HTML containers
+    const shopContainer = document.getElementById('plant-shop');
+    const factoryContainer = document.getElementById('factories');
+
+    shopContainer.innerHTML = '';
+    factoryContainer.innerHTML = '';
+
+    updateSeedCount();
+    updateOxygenCount();
+    updateOPS();
+
+    saveToLocalStorage();
+    // Refresh the page to reflect the changes
+    location.reload();
+}
+
+function maxResources() {
+    totalSeeds = 1e15;  // This will set the seeds to a very large number, you can adjust as needed
+    totalOxygen = 1e15;  // This will set the oxygen to a very large number, you can adjust as needed
+    updateSeedCount();
+    updateOxygenCount();
+    saveToLocalStorage();
+}
+
+document.getElementById('game-reset').addEventListener('click', gameReset);
+document.getElementById('max-resources').addEventListener('click', maxResources);
 
 // -----------------------------
 // Task List Operations
@@ -98,8 +162,8 @@ function addTaskToList(text, seeds, checked = false, saveToStorage = true) {
     taskList.appendChild(li);
 
     if (saveToStorage) {
-        tasks.push({ text: text, seeds: seeds, checked: checked });
-        saveTasksToLocalStorage();
+        tasks.push({ text, seeds, checked });
+        saveToLocalStorage();
     }
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = "Delete";
@@ -162,31 +226,34 @@ function startNewDay() {
 }
 
 // -----------------------------
-// Game Screen Operations
+// Game Operations
 // -----------------------------
 
 function toggleEnvironment(screenId) {
-    let taskScreen = document.getElementById('task-screen');
-    let gameScreen = document.getElementById('game-screen');
+    const screens = {
+        'debug-screen': document.getElementById('debug-screen'),
+        'task-screen': document.getElementById('task-screen'),
+        'game-screen': document.getElementById('game-screen')
+    };
 
-    if (screenId === 'task-screen') {
-        taskScreen.style.display = 'block';
-        gameScreen.style.display = 'none';
-    } else if (screenId === 'game-screen') {
-        gameScreen.style.display = 'block';
-        taskScreen.style.display = 'none';
-    }
+    Object.keys(screens).forEach(key => {
+        screens[key].style.display = key === screenId ? 'block' : 'none';
+    });
 }
 
-const baseOxygenCosts = [0, 15, 100, 1100, 12000];
+//Factories
+
+const baseOxygenCosts = [0, 15, 100, 1100, 12000, 130000, 1.4e6, 2e7, 3.3e8];
+const factoryNames = ['Algae', 'Moss', 'Succulent', 'Fern', 'Shrub', 'Dogwood', 'Palm', 'Oak', 'Coastal redwood'];
+const factoryOxygenProd = [0.05, 0.1, 1, 8, 47, 260, 1400, 7800, 44000];
 const factories = baseOxygenCosts.map((baseCost, idx) => {
     return {
-        name: ['Algae', 'Moss', 'Succulent', 'Fern', 'Shrub'][idx],
+        name: factoryNames[idx],
         seedCost: 1,
         baseOxygenCost: baseCost,
         oxygenCost: baseCost,
         owned: 0,
-        oxygenProduction: [0.05, 0.1, 1, 8, 47][idx]
+        oxygenProduction: factoryOxygenProd[idx]
     };
 });
 
@@ -206,7 +273,8 @@ function displayFactories() {
         factoryDiv.appendChild(owned);
 
         const buyButton = document.createElement('button');
-        buyButton.textContent = `Buy for ${factory.seedCost} seed(s) and ${Math.round(factory.oxygenCost)} oxygen`;
+        // Use formatNumber to display the oxygen cost
+        buyButton.textContent = `Buy for ${factory.seedCost} seed(s) and ${formatNumber(factory.oxygenCost)} oxygen`;
         buyButton.addEventListener('click', () => purchaseFactory(factory));
         factoryDiv.appendChild(buyButton);
 
@@ -226,6 +294,8 @@ function purchaseFactory(factory) {
         updateSeedCount();
         updateOxygenCount();
         updateFactoryDisplay(factory);  // Call this to update owned count and price in the display
+        updateOPS();
+        saveToLocalStorage();
     } else {
         alert("Not enough resources!");
     }
@@ -238,24 +308,40 @@ function updateFactoryDisplay(factory) {
         if (factoryDOM.querySelector('span').textContent === factory.name) {
             factoryDOM.querySelector('.factory-owned').textContent = `Owned: ${factory.owned}`;
             const buyButton = factoryDOM.querySelector('button');
-            buyButton.textContent = `Buy for ${factory.seedCost} seed(s) and ${factory.oxygenCost} oxygen`;
+            // Use formatNumber to update the displayed oxygen cost
+            buyButton.textContent = `Buy for ${factory.seedCost} seed(s) and ${formatNumber(factory.oxygenCost)} oxygen`;
         }
     });
 }
 
 function updateOxygenProduction() {
-    factories.forEach(factory => {
-        totalOxygen += factory.oxygenProduction * factory.owned;
-    });
-    updateOxygenCount();  // Update the displayed oxygen count
+    factories.forEach(factory => totalOxygen += factory.oxygenProduction * factory.owned);
+    updateOxygenCount();
+    updateOPS();
 }
+
+function calculateOxygenPerSecond() {
+    return factories.reduce((acc, factory) => acc + (factory.oxygenProduction * factory.owned), 0);
+}
+
+function updateOPS() {
+    setInnerText('oxygen-per-second', formatNumber(calculateOxygenPerSecond()));
+}
+
+//Plants
 
 const plants = [
     { name: "Spider plant", oxygenCost: 1e1, purchased: false },
     { name: "Beets", oxygenCost: 1e4, purchased: false },
     { name: "Basil", oxygenCost: 1e5, purchased: false },
     { name: "Snake plant", oxygenCost: 1e6, purchased: false },
-    { name: "Pothos", oxygenCost: 1e7, purchased: false }
+    { name: "Pothos", oxygenCost: 1e7, purchased: false },
+    { name: "Mint", oxygenCost: 1e8, purchased: false },
+    { name: "Peace lily", oxygenCost: 1e9, purchased: false },
+    { name: "Bonsai tree", oxygenCost: 1e10, purchased: false },
+    { name: "Apple tree", oxygenCost: 1e11, purchased: false },
+    { name: "Lemon tree", oxygenCost: 1e12, purchased: false },
+    { name: "Glowing alien plant", oxygenCost: 1e13, purchased: false }
 ];
 
 function displayPlants() {
@@ -286,9 +372,10 @@ function purchasePlant(plant) {
     if (totalOxygen >= plant.oxygenCost) {
         totalOxygen -= plant.oxygenCost;
         plant.purchased = true;
-        
+
         updateOxygenCount();
         updatePlantButton(plant); // Call to update the plant's button
+        saveToLocalStorage();
     } else {
         alert("Not enough oxygen!");
     }
@@ -309,11 +396,15 @@ function updatePlantButton(plant) {
     });
 }
 
+// Initialization
+
 window.onload = function () {
-    loadTasksFromLocalStorage();
-    updateSeedCount();
+    loadFromLocalStorage();
+    setInnerText('seed-count', totalSeeds);
+    setInnerText('seed-count-game', totalSeeds);
     updateOxygenCount();
     displayFactories();
-    displayPlants(); // Display the available plants
+    displayPlants();
+    updateOPS();
     setInterval(updateOxygenProduction, 50);
 }
