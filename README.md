@@ -1,1 +1,1 @@
-TODO add grow with me homepage, created by Eddie Yang for a dumbass hackathon
+TODO add grow with me homepage, created by Eddie Yang for hacknc2023
