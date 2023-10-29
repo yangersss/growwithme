@@ -53,40 +53,15 @@ function loadFromLocalStorage() {
         tasks.push(...parsedTasks);
         parsedTasks.forEach(task => {
             addTaskToList(task.text, task.seeds, task.checked, false);
-            // This will add the event listeners to the checkboxes of existing tasks.
-            document.querySelectorAll('.task-check').forEach(checkbox => {
-                checkbox.addEventListener('change', function () {
-                    const seedValue = Number(this.getAttribute('data-seeds'));
-                    if (this.checked) {
-                        totalSeeds += seedValue;
-                    } else {
-                        totalSeeds -= seedValue;
-                    }
-                    updateSeedCount();
-                    const taskSpan = this.nextSibling.nextSibling;
-                    taskSpan.classList.toggle('checked', this.checked);
-
-                    const taskText = taskSpan.textContent.replace(` (${seedValue} seeds)`, '');
-                    const taskIndex = tasks.findIndex(task => task.text === taskText && task.seeds === seedValue);
-                    if (taskIndex > -1) {
-                        tasks[taskIndex].checked = this.checked;
-                        saveTasksToLocalStorage();
-                    }
-                });
-            });
             if (task.checked) totalSeeds += parseInt(task.seeds);
         });
     }
-    
-    document.querySelectorAll('.task-check-btn').forEach(checkbox => {
-        checkbox.addEventListener('click', handleTaskCheckboxClick);
-    });
 
     if (storedSeeds) totalSeeds = parseInt(storedSeeds);
     if (storedOxygen) totalOxygen = parseInt(storedOxygen);
 
     updateOxygenCount();
-
+    
     // Load factories
     const storedFactories = localStorage.getItem('factories');
     if (storedFactories) {
@@ -154,46 +129,15 @@ document.getElementById('max-resources').addEventListener('click', maxResources)
 // Task List Operations
 // -----------------------------
 
-function addTaskToList(task) {
+function addTaskToList(text, seeds, checked = false, saveToStorage = true) {
+    const taskList = document.getElementById('task-list');
     const li = document.createElement('li');
+    const checkbox = document.createElement('input');
 
-    // Create checkbox button
-    const checkbox = document.createElement('button');
-    checkbox.className = 'task-check-btn';
-    checkbox.innerHTML = '<i class="fa-solid fa-check"></i>';
-    checkbox.dataset.checked = task.checked ? 'true' : 'false'; // Using a data attribute to check/uncheck
-    if (task.checked) {
-        checkbox.classList.add('checked'); // For CSS styling
-    }
-
-    // Event listener for checkbox
-    checkbox.addEventListener('click', handleTaskCheckboxClick);
-
-    li.appendChild(checkbox);
-
-    const taskSpan = document.createElement('span');
-    taskSpan.className = 'task-description';
-    if (checked) taskSpan.classList.add('checked');
-    taskSpan.textContent = text + " (" + seeds + " seeds)";
-    li.appendChild(taskSpan);
-
-    // Delete button with Font Awesome trash icon
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'task-delete-btn';
-    deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
-    deleteBtn.addEventListener('click', function () {
-        taskList.removeChild(li);
-
-        tasks = tasks.filter(task => task.text !== text || task.seeds !== seeds);
-        saveTasksToLocalStorage();
-
-        if (checked) {
-            totalSeeds -= parseInt(seeds);
-            updateSeedCount();
-        }
-    });
-    li.appendChild(deleteBtn);
-
+    checkbox.type = 'checkbox';
+    checkbox.checked = checked;
+    checkbox.className = 'task-check';
+    checkbox.setAttribute('data-seeds', seeds);
     checkbox.addEventListener('change', function () {
         const seedValue = Number(this.getAttribute('data-seeds'));
         if (this.checked) {
@@ -205,36 +149,40 @@ function addTaskToList(task) {
         taskSpan.classList.toggle('checked', this.checked);
 
         const taskIndex = tasks.findIndex(task => task.text === text && task.seeds === seeds);
-        if (taskIndex > -1) {
-            tasks[taskIndex].checked = this.checked;
-            saveTasksToLocalStorage();
-        }
+        tasks[taskIndex].checked = this.checked;
+        saveTasksToLocalStorage();
     });
+    li.appendChild(checkbox);
+
+    const taskSpan = document.createElement('span');
+    taskSpan.className = 'task-text';
+    taskSpan.textContent = text + " (" + seeds + " seeds)";
+    li.appendChild(taskSpan);
 
     taskList.appendChild(li);
 
     if (saveToStorage) {
         tasks.push({ text, seeds, checked });
+        saveToLocalStorage();
+    }
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Delete";
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.addEventListener('click', function () {
+        // Remove the task from the DOM
+        taskList.removeChild(li);
+
+        // Update tasks array and save to localStorage
+        tasks = tasks.filter(task => task.text !== text || task.seeds !== seeds);
         saveTasksToLocalStorage();
-    }
-}
 
-function handleTaskCheckboxClick() {
-    const seedValue = Number(this.getAttribute('data-seeds'));
-    
-    if (this.dataset.checked === 'false') {
-        totalSeeds += seedValue;
-        this.dataset.checked = 'true';
-        this.classList.add('checked');
-    } else {
-        totalSeeds -= seedValue;
-        this.dataset.checked = 'false';
-        this.classList.remove('checked');
-    }
-
-    updateSeedCount();
-
-    // ... rest of your logic for updating local storage
+        // Update seed count if the task was checked
+        if (checked) {
+            totalSeeds -= parseInt(seeds);
+            updateSeedCount();
+        }
+    });
+    li.appendChild(deleteBtn);
 }
 
 function addTask() {

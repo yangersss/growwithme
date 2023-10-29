@@ -2,7 +2,6 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'DM Sans', sans-serif;
-    background-color: #f9f9f9; /* Add a subtle background color */
 }
 
 /* Navbar */
@@ -40,55 +39,74 @@ body, html {
 
 /* Seed Counter */
 .seed-counter, .oxygen-counter, .seed-counter-info {
+    margin: 20px;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-    color: #4CAF50;  /* Green shade for counters */
-    margin: 10px 0;
+    padding: 15px 0;
+    border-radius: 10px;  /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow for a raised look */
+    width: 50%;  /* Make it narrower for a more refined look */
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    transition: all 0.3s ease;
+    transform-origin: center; /* Setting the point for transformation */
+    animation: pulse 1.5s infinite alternate; /* Breathing effect */
+}
+.seed-counter, .seed-counter-info{
+    color: #2E8B57;  /* Darker Green for contrast with light background */
+    background-color: #98FB98;  /* Light Green */
 }
 
-/* Seed Counter */
-.seed-counter, .oxygen-counter, .seed-counter-info {
-    position: relative; /* Allows positioning of the hover information */
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    color: #4CAF50;  /* Green shade for counters */
-    margin: 10px 0;
-    cursor: pointer; /* Indicates interactivity */
-    transition: transform 0.3s ease-in-out; /* Smooth zooming effect */
+.oxygen-counter{
+    color: #0400ff;  /* Darker Green for contrast with light background */
+    background-color: #6cd7e6;  /* Light Green */
 }
 
+/* Breathing or Pulsating animation */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.03); /* Slightly enlarges the element */
+    }
+}
+
+.seed-counter::after {
+    content: 'Seeds can be used to buy factories';  /* Tooltip message */
+    display: none;  /* Initially hidden */
+    position: absolute;  /* Positioned relative to .seed-counter */
+    bottom: 100%;  /* Above the seed counter */
+    left: 50%;  /* Center it horizontally */
+    transform: translateX(-50%);  /* Ensure it's centered */
+    background-color: rgba(0, 0, 0, 0.7);  /* Semi-transparent black background */
+    color: #ffffff;  /* White text */
+    padding: 8px 12px;  /* Padding around text */
+    border-radius: 5px;  /* Rounded corners */
+    font-size: 14px;  /* Font size for tooltip */
+    width: 220px;  /* Width of the tooltip */
+    text-align: center;  /* Centered text */
+    pointer-events: none;  /* Ensures it doesn't interfere with other interactions */
+    opacity: 0;  /* Start as transparent */
+    transform: translateX(-50%) translateY(10px);  /* Start a bit above the final position */
+    transition: opacity 0.3s ease, transform 0.3s ease;  /* Smooth transition for opacity and position */
+}
+
+/* Displaying the tooltip on hover */
+.seed-counter:hover::after {
+    display: block;  /* Show the tooltip */
+    opacity: 1;  /* Fully opaque */
+    transform: translateX(-50%) translateY(0);  /* Move to its final position */
+}
+
+/* Adding a small animation when hovering over the seed counter for emphasis */
 .seed-counter:hover {
-    transform: scale(1.05); /* Slightly enlarge the seed counter on hover */
-}
-
-/* Icon Style */
-.seed-counter i {
-    margin-right: 8px; /* Space between icon and number */
-    vertical-align: middle; /* Align icon with the text */
-}
-
-/* Information Tooltip */
-.seed-counter:before {
-    content: "Seeds are used to buy factories"; 
-    position: absolute;
-    bottom: 110%; /* Positioning above the seed counter */
-    left: 50%; /* Centering the tooltip */
-    transform: translateX(-50%); /* Further centering */
-    background-color: #333;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: 14px;
-    color: white;
-    opacity: 0; /* Initially hidden */
-    pointer-events: none; /* Ensures tooltip doesn't interfere with interactions */
-    transition: opacity 0.3s ease-in-out; /* Smooth fade effect */
-    white-space: nowrap; /* Prevents wrapping of text */
-}
-
-.seed-counter:hover:before {
-    opacity: 1; /* Show the tooltip on hover */
+    background-color: #90EE90;  /* Slightly different green shade on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);  /* Increase the shadow for a lifted effect */
+    transform: scale(1.05); /* Slightly bigger scale on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* More distinct shadow */
 }
 
 /* Task Screen */
@@ -102,50 +120,18 @@ body, html {
     align-items: center;
 }
 
-/* Task list styles */
-#task-list li {
-    padding: 10px 0;
+#task-list {
+    list-style-type: none;
+    padding-left: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s;
+    width: 100%;
 }
 
-.task-check-btn {
-    appearance: none;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    margin-right: 10px;
+#task-list li {
+    padding: 10px;
 }
-
-.task-check-btn:checked + .task-description {
-    text-decoration: line-through;
-    color: #aaa;
-}
-
-.task-description.checked {
-    text-decoration: line-through;
-    color: #aaa;
-}
-
-.task-delete-btn {
-    appearance: none;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: red;
-    margin-left: 10px;
-}
-
-.task-delete-btn:hover {
-    color: darkred;
-}
-
 
 .delete-btn {
     background-color: red;

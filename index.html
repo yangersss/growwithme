@@ -7,7 +7,6 @@
     <title>Task & Game App</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/fe0ff46ae6.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -20,7 +19,7 @@
 
     <!-- Content Area -->
     <div class="content">
-
+        
         <!-- Debug Screen -->
         <div id="debug-screen" style="display:none;">
             <h2>Debug Actions</h2>
@@ -31,37 +30,29 @@
         <!-- Task Screen -->
         <div class="screen" id="task-screen">
             <div class="seed-counter">
-                <i class="fa-solid fa-seedling"></i><span id="seed-count">0</span> Seeds
+                <span id="seed-count">0</span> Seeds
             </div>
             
             <h2>Your Tasks</h2>
-
+            
             <!-- Add Task -->
             <div class="add-task">
                 <input type="text" id="task-input" placeholder="Enter your task...">
                 <input type="number" id="seed-input" placeholder="Seeds" min="-7" max="7">
                 <button onclick="addTask()">Add Task</button>
             </div>
-
+            
             <button class="start-new-day" onclick="startNewDay()">Start a New Day</button>
-
+            
             <!-- List of Tasks -->
-            <ul id="task-list">
-                <!-- Example Task Structure -->
-                <li>
-                    <button class="task-check-btn"><i class="fa-solid fa-check"></i></button>
-                    <span class="task-description"></span>
-                    <button class="task-delete-btn"><i class="fa-solid fa-trash"></i></button>
-                </li>
-                <!-- Add more tasks following the structure above -->
-            </ul>
+            <ul id="task-list"></ul>
         </div>
 
         <!-- Game Screen -->
         <div class="screen" id="game-screen">
             <!-- Game Sections Container -->
             <div class="game-sections">
-
+                
                 <!-- Info Section (Left) -->
                 <div class="game-section" id="info-section">
                     <h3>Info</h3>
