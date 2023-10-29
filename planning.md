@@ -12,9 +12,9 @@ Lemon tree
 Glowing alien plant
 
 **factories:**
-algae
-moss
-Succulents
+Algae
+Moss
+Succulent
 Fern
 Shrub
 Dogwood
