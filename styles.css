@@ -1,7 +1,8 @@
 body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'DM Sans', sans-serif;
+    background-color: #f9f9f9; /* Add a subtle background color */
 }
 
 /* Navbar */
@@ -46,9 +47,48 @@ body, html {
     margin: 10px 0;
 }
 
-.seed-counter {
-    width: 100vw;    /* Full viewport width */
-    order: -1;       /* At the top inside the content */
+/* Seed Counter */
+.seed-counter, .oxygen-counter, .seed-counter-info {
+    position: relative; /* Allows positioning of the hover information */
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #4CAF50;  /* Green shade for counters */
+    margin: 10px 0;
+    cursor: pointer; /* Indicates interactivity */
+    transition: transform 0.3s ease-in-out; /* Smooth zooming effect */
+}
+
+.seed-counter:hover {
+    transform: scale(1.05); /* Slightly enlarge the seed counter on hover */
+}
+
+/* Icon Style */
+.seed-counter i {
+    margin-right: 8px; /* Space between icon and number */
+    vertical-align: middle; /* Align icon with the text */
+}
+
+/* Information Tooltip */
+.seed-counter:before {
+    content: "Seeds are used to buy factories"; 
+    position: absolute;
+    bottom: 110%; /* Positioning above the seed counter */
+    left: 50%; /* Centering the tooltip */
+    transform: translateX(-50%); /* Further centering */
+    background-color: #333;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: white;
+    opacity: 0; /* Initially hidden */
+    pointer-events: none; /* Ensures tooltip doesn't interfere with interactions */
+    transition: opacity 0.3s ease-in-out; /* Smooth fade effect */
+    white-space: nowrap; /* Prevents wrapping of text */
+}
+
+.seed-counter:hover:before {
+    opacity: 1; /* Show the tooltip on hover */
 }
 
 /* Task Screen */
@@ -62,18 +102,50 @@ body, html {
     align-items: center;
 }
 
-#task-list {
-    list-style-type: none;
-    padding-left: 0;
+/* Task list styles */
+#task-list li {
+    padding: 10px 0;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 100%;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
 }
 
-#task-list li {
-    padding: 10px;
+.task-check-btn {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
 }
+
+.task-check-btn:checked + .task-description {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.task-description.checked {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.task-delete-btn {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: red;
+    margin-left: 10px;
+}
+
+.task-delete-btn:hover {
+    color: darkred;
+}
+
 
 .delete-btn {
     background-color: red;
