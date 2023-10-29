@@ -23,7 +23,7 @@ function updateSeedCount() {
 }
 
 function updateOxygenCount() {
-    document.getElementById('oxygen-count').textContent = `Oxygen: ${formatNumber(totalOxygen)}`;
+    document.getElementById('oxygen-count').textContent = `${formatNumber(totalOxygen)}`;
 }
 
 // -----------------------------
@@ -69,7 +69,7 @@ function addTaskToList(text, seeds, checked = false, saveToStorage = true) {
     const taskList = document.getElementById('task-list');
     const li = document.createElement('li');
     const checkbox = document.createElement('input');
-    
+
     checkbox.type = 'checkbox';
     checkbox.checked = checked;
     checkbox.className = 'task-check';
@@ -178,13 +178,17 @@ function toggleEnvironment(screenId) {
     }
 }
 
-const factories = [
-    { name: 'Algae', seedCost: 1, oxygenCost: 0, owned: 0, oxygenProduction: 0.1 },
-    { name: 'Moss', seedCost: 1, oxygenCost: 15, owned: 0, oxygenProduction: 1 },
-    { name: 'Succulent', seedCost: 1, oxygenCost: 100, owned: 0, oxygenProduction: 8 },
-    { name: 'Fern', seedCost: 1, oxygenCost: 1100, owned: 0, oxygenProduction: 47 },
-    { name: 'Shrub', seedCost: 1, oxygenCost: 12000, owned: 0, oxygenProduction: 260 }
-];
+const baseOxygenCosts = [0, 15, 100, 1100, 12000];
+const factories = baseOxygenCosts.map((baseCost, idx) => {
+    return {
+        name: ['Algae', 'Moss', 'Succulent', 'Fern', 'Shrub'][idx],
+        seedCost: 1,
+        baseOxygenCost: baseCost,
+        oxygenCost: baseCost,
+        owned: 0,
+        oxygenProduction: [0.05, 0.1, 1, 8, 47][idx]
+    };
+});
 
 function displayFactories() {
     const factoryContainer = document.getElementById('factories');
@@ -202,7 +206,7 @@ function displayFactories() {
         factoryDiv.appendChild(owned);
 
         const buyButton = document.createElement('button');
-        buyButton.textContent = `Buy for ${factory.seedCost} seed(s) and ${factory.oxygenCost} oxygen`;
+        buyButton.textContent = `Buy for ${factory.seedCost} seed(s) and ${Math.round(factory.oxygenCost)} oxygen`;
         buyButton.addEventListener('click', () => purchaseFactory(factory));
         factoryDiv.appendChild(buyButton);
 
@@ -211,18 +215,20 @@ function displayFactories() {
 }
 
 function purchaseFactory(factory) {
-    console.log(`Attempting to purchase ${factory.name}`);
     if (totalSeeds >= factory.seedCost && totalOxygen >= factory.oxygenCost) {
         totalSeeds -= factory.seedCost;
         totalOxygen -= factory.oxygenCost;
         factory.owned++;
 
+        // Update the factory cost after purchasing
+        factory.oxygenCost = Math.round(factory.baseOxygenCost * (1.15 ** factory.owned));
+
         updateSeedCount();
         updateOxygenCount();
-        updateFactoryDisplay(factory);  // Call this to update owned count in the display
+        updateFactoryDisplay(factory);  // Call this to update owned count and price in the display
     } else {
         alert("Not enough resources!");
-   }
+    }
 }
 
 function updateFactoryDisplay(factory) {
@@ -231,6 +237,8 @@ function updateFactoryDisplay(factory) {
     factoriesDOM.forEach(factoryDOM => {
         if (factoryDOM.querySelector('span').textContent === factory.name) {
             factoryDOM.querySelector('.factory-owned').textContent = `Owned: ${factory.owned}`;
+            const buyButton = factoryDOM.querySelector('button');
+            buyButton.textContent = `Buy for ${factory.seedCost} seed(s) and ${factory.oxygenCost} oxygen`;
         }
     });
 }
@@ -242,10 +250,70 @@ function updateOxygenProduction() {
     updateOxygenCount();  // Update the displayed oxygen count
 }
 
+const plants = [
+    { name: "Spider plant", oxygenCost: 1e1, purchased: false },
+    { name: "Beets", oxygenCost: 1e4, purchased: false },
+    { name: "Basil", oxygenCost: 1e5, purchased: false },
+    { name: "Snake plant", oxygenCost: 1e6, purchased: false },
+    { name: "Pothos", oxygenCost: 1e7, purchased: false }
+];
+
+function displayPlants() {
+    const plantContainer = document.getElementById('plants');
+    plants.forEach(plant => {
+        const plantDiv = document.createElement('div');
+        plantDiv.className = 'plant-item';
+
+        const name = document.createElement('span');
+        name.textContent = plant.name;
+        plantDiv.appendChild(name);
+
+        const buyButton = document.createElement('button');
+        if (plant.purchased) {
+            buyButton.textContent = `Purchased`;
+            buyButton.disabled = true;
+        } else {
+            buyButton.textContent = `Buy for ${formatNumber(plant.oxygenCost)} oxygen`;
+            buyButton.addEventListener('click', () => purchasePlant(plant));
+        }
+        plantDiv.appendChild(buyButton);
+
+        plantContainer.appendChild(plantDiv);
+    });
+}
+
+function purchasePlant(plant) {
+    if (totalOxygen >= plant.oxygenCost) {
+        totalOxygen -= plant.oxygenCost;
+        plant.purchased = true;
+        
+        updateOxygenCount();
+        updatePlantButton(plant); // Call to update the plant's button
+    } else {
+        alert("Not enough oxygen!");
+    }
+}
+
+function updatePlantButton(plant) {
+    const plantContainer = document.getElementById('plants');
+    const plantItems = plantContainer.querySelectorAll('.plant-item');
+
+    plantItems.forEach(plantItem => {
+        const nameSpan = plantItem.querySelector('span');
+        if (nameSpan.textContent === plant.name) {
+            const buyButton = plantItem.querySelector('button');
+            buyButton.textContent = `Purchased`;
+            buyButton.disabled = true;
+            buyButton.removeEventListener('click', () => purchasePlant(plant));
+        }
+    });
+}
+
 window.onload = function () {
     loadTasksFromLocalStorage();
     updateSeedCount();
     updateOxygenCount();
     displayFactories();
+    displayPlants(); // Display the available plants
     setInterval(updateOxygenProduction, 50);
 }
