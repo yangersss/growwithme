@@ -119,9 +119,13 @@ function toggleEnvironment(screenId) {
 }
 
 function updateSeedCount() {
-    const seedCounter = document.getElementById('seed-count');
-    seedCounter.textContent = totalSeeds;
+    const seedCounterTask = document.getElementById('seed-count');
+    seedCounterTask.textContent = totalSeeds;
+
+    const seedCounterGame = document.getElementById('seed-count-game');
+    seedCounterGame.textContent = totalSeeds;
 }
+
 
 function startNewDay() {
     // Get all checked checkboxes

@@ -86,3 +86,47 @@ body, html {
 .start-new-day:hover {
     background-color: #FFEC40;
 }
+.game-sections {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    flex-wrap: nowrap; /* Keep the sections on the same row */
+}
+
+.game-section {
+    background-color: #f2f2f2; /* A light gray background for visual separation */
+    padding: 15px;
+    width: 30%;  /* Divide screen roughly into thirds for each section */
+    box-sizing: border-box; /* This ensures padding is included in the width */
+}
+
+/* For Info Section (Left) */
+/* Updated this to correctly position the Info label at the top */
+#info-section h3 {
+    align-self: flex-start;
+}
+
+/* New styles for the seed counter inside the game info section */
+.seed-counter-info {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #4CAF50;  /* Green shade for counters */
+    margin: 10px 0;
+}
+
+/* For Seed and Oxygen Counters */
+.seed-counter, .oxygen-counter {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #4CAF50;  /* Green shade for counters */
+    margin: 10px 0;
+}
+
+/* Make sure the Plant Shop (Middle) has a distinct look */
+#plant-shop {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+

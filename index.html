@@ -15,15 +15,13 @@
         <button onclick="toggleEnvironment('game-screen')">Game</button>
     </div>
 
-    <!-- Seed Counter -->
-    <div class="seed-counter">
-        <span id="seed-count">0</span> Seeds
-    </div>
-
     <!-- Content Area -->
     <div class="content">
         <!-- Task Screen -->
         <div class="screen" id="task-screen">
+            <div class="seed-counter">
+                <span id="seed-count">0</span> Seeds
+            </div>
             <h2>Your Tasks</h2>
 
             <!-- Add Task -->
@@ -38,34 +36,39 @@
             </ul>
         </div>
 
+        <!-- Game Screen -->
         <div class="screen" id="game-screen">
-            <h2>Welcome to the Game!</h2>
-        
-            <!-- Game Tabs -->
-            <div class="game-tabs">
-                <button onclick="toggleGameTab('plant-shop')">Plant Shop</button>
-                <button onclick="toggleGameTab('garden')">Garden</button>
-                <button onclick="toggleGameTab('factories')">Factories</button>
-            </div>
-        
-            <!-- Plant Shop Tab Content -->
-            <div class="tab-content" id="plant-shop">
-                <!-- Display available plants for purchase here -->
-            </div>
-        
-            <!-- Garden Tab Content -->
-            <div class="tab-content" id="garden">
-                <!-- Display user's plants here -->
-            </div>
-        
-            <!-- Factories Tab Content -->
-            <div class="tab-content" id="factories">
-                <!-- Display user's factories here -->
+            <!-- Game Sections Container -->
+            <div class="game-sections">
+                <!-- Info Section (Left) -->
+                <div class="game-section" id="info-section">
+                    <h3>Info</h3>
+                    <!-- Seed Counter updated here -->
+                    <div class="seed-counter-info">
+                        <span id="seed-count-game">0</span> Seeds
+                    </div>
+                    <!-- Additional info such as oxygen can go here -->
+                    <div class="oxygen-counter">
+                        <span id="oxygen-count">0</span> Oxygen
+                    </div>
+                </div>
+
+                <!-- Plant Shop Section (Middle) -->
+                <div class="game-section" id="plant-shop">
+                    <h3>Plant Shop</h3>
+                    <!-- Display available plants for purchase here -->
+                </div>
+
+                <!-- Factories Section (Right) -->
+                <div class="game-section" id="factories">
+                    <h3>Factories</h3>
+                    <!-- Display user's factories here -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
+
+        <script src="script.js"></script>
 </body>
 
 </html>
