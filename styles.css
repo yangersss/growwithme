@@ -2,6 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'DM Sans', sans-serif;
+    height: 100%;
 }
 
 /* Navbar */
@@ -27,158 +28,118 @@ body, html {
     background-color: #777;
 }
 
-/* Content */
-.content {
-    flex-direction: column;  /* Stack children vertically */
-}
-
 /* Game Screen */
 #game-screen {
     display: none;
 }
 
-/* Seed Counter */
+/* Seed and Oxygen Counter */
 .seed-counter, .oxygen-counter, .seed-counter-info {
-    margin: 20px;
+    margin: 20px auto;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
     padding: 15px 0;
-    border-radius: 10px;  /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Subtle shadow for a raised look */
-    width: 50%;  /* Make it narrower for a more refined look */
-    margin-left: auto;
-    margin-right: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 50%;
     position: relative;
     transition: all 0.3s ease;
-    transform-origin: center; /* Setting the point for transformation */
-    animation: pulse 1.5s infinite alternate; /* Breathing effect */
-}
-.seed-counter, .seed-counter-info{
-    color: #2E8B57;  /* Darker Green for contrast with light background */
-    background-color: #98FB98;  /* Light Green */
+    animation: pulse 1.5s infinite alternate;
 }
 
-.oxygen-counter{
-    color: #0400ff;  /* Darker Green for contrast with light background */
-    background-color: #6cd7e6;  /* Light Green */
+.seed-counter, .seed-counter-info {
+    color: #2E8B57;
+    background-color: #98FB98;
 }
 
-/* Breathing or Pulsating animation */
+.oxygen-counter {
+    color: #0400ff;
+    background-color: #6cd7e6;
+}
+
 @keyframes pulse {
     0% {
         transform: scale(1);
     }
     100% {
-        transform: scale(1.03); /* Slightly enlarges the element */
+        transform: scale(1.03);
     }
 }
 
 .seed-counter::after {
-    content: 'Seeds can be used to buy factories';  /* Tooltip message */
-    display: none;  /* Initially hidden */
-    position: absolute;  /* Positioned relative to .seed-counter */
-    bottom: 100%;  /* Above the seed counter */
-    left: 50%;  /* Center it horizontally */
-    transform: translateX(-50%);  /* Ensure it's centered */
-    background-color: rgba(0, 0, 0, 0.7);  /* Semi-transparent black background */
-    color: #ffffff;  /* White text */
-    padding: 8px 12px;  /* Padding around text */
-    border-radius: 5px;  /* Rounded corners */
-    font-size: 14px;  /* Font size for tooltip */
-    width: 220px;  /* Width of the tooltip */
-    text-align: center;  /* Centered text */
-    pointer-events: none;  /* Ensures it doesn't interfere with other interactions */
-    opacity: 0;  /* Start as transparent */
-    transform: translateX(-50%) translateY(10px);  /* Start a bit above the final position */
-    transition: opacity 0.3s ease, transform 0.3s ease;  /* Smooth transition for opacity and position */
+    content: 'Seeds can be used to buy factories';
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 220px;
+    text-align: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Displaying the tooltip on hover */
-.seed-counter:hover::after {
-    display: block;  /* Show the tooltip */
-    opacity: 1;  /* Fully opaque */
-    transform: translateX(-50%) translateY(0);  /* Move to its final position */
-}
-
-/* Adding a small animation when hovering over the seed counter for emphasis */
 .seed-counter:hover {
-    background-color: #90EE90;  /* Slightly different green shade on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);  /* Increase the shadow for a lifted effect */
-    transform: scale(1.05); /* Slightly bigger scale on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* More distinct shadow */
+    background-color: #90EE90;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
 }
 
-/* Task Screen */
-.screen {
-    min-width: 100vw;
-}
-
-.add-task {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-/* Removed styles from the task-list container that should only apply to individual tasks */
-#task-list {
-    width: 100%;  /* Ensure the task list takes up the full width of its container */
-    display: flex;  /* Make the list a flex container */
-    flex-direction: column;  /* Stack items vertically */
-    align-items: center;  /* Center tasks horizontally */
-    gap: 10px;  /* Spacing between tasks */
-    width: 75%;  /* Task width */
-}
-
-/* Task styling - applying the gray background and other styles here */
-#task-list li {
+.seed-counter:hover::after {
     display: block;
-    width: 100%;  /* This ensures each task takes up the full width of its parent */
-    background-color: #eaeaea;  /* Light gray background */
-    border-radius: 5px;  /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
-    padding: 10px 15px;  /* Padding for content inside the task */
-    margin-bottom: 10px;  /* Space between tasks */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Smooth transitions for the hover effect */
-    cursor: pointer;  /* Indicates the task is interactive */
-    display: flex;  /* Flex layout to position checkbox, text, and delete button */
-    align-items: center;  /* Vertically center the task contents */
-    justify-content: space-between;  /* Separate the three items (checkbox, text, delete button) */
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
-/* Hover effect */
+#task-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 75%;
+}
+
+#task-list li {
+    width: 100%;
+    background-color: #eaeaea;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 #task-list li:hover {
-    transform: translateY(-5px);  /* Lift the task slightly on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);  /* Increase the shadow for a lifted effect */
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Add an additional effect for active state (e.g., while clicking) */
 #task-list li:active {
-    transform: translateY(0);  /* Push the task back down */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Revert to the original shadow */
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .task-check {
-    margin-right: 15px;  /* Space between checkbox and text */
+    margin-right: 15px;
 }
 
 .task-text {
-    flex-grow: 1;  /* Allow text to take up remaining space */
-    text-align: center;  /* Center the task text */
+    flex-grow: 1;
+    text-align: center;
 }
 
 .delete-btn {
     background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-left: 15px;  /* Space between text and delete button */
-}
-
-.delete-btn {
-    background-color: red;
-    color: white;
+    color: #fff;
     border: none;
     margin-left: 10px;
     padding: 5px 10px;
@@ -186,7 +147,7 @@ body, html {
 }
 
 .start-new-day {
-    background-color: #FFD700; /* Gold */
+    background-color: #FFD700;
     color: #333;
     border: none;
     padding: 10px 20px;
@@ -204,7 +165,6 @@ body, html {
     display: flex;
     justify-content: space-around;
     margin-top: 20px;
-    flex-wrap: nowrap; /* Keep sections on the same row */
 }
 
 .game-section {
