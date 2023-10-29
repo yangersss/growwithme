@@ -120,17 +120,60 @@ body, html {
     align-items: center;
 }
 
+/* Removed styles from the task-list container that should only apply to individual tasks */
 #task-list {
-    list-style-type: none;
-    padding-left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+    width: 100%;  /* Ensure the task list takes up the full width of its container */
+    display: flex;  /* Make the list a flex container */
+    flex-direction: column;  /* Stack items vertically */
+    align-items: center;  /* Center tasks horizontally */
+    gap: 10px;  /* Spacing between tasks */
+    width: 75%;  /* Task width */
 }
 
+/* Task styling - applying the gray background and other styles here */
 #task-list li {
-    padding: 10px;
+    display: block;
+    width: 100%;  /* This ensures each task takes up the full width of its parent */
+    background-color: #eaeaea;  /* Light gray background */
+    border-radius: 5px;  /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
+    padding: 10px 15px;  /* Padding for content inside the task */
+    margin-bottom: 10px;  /* Space between tasks */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;  /* Smooth transitions for the hover effect */
+    cursor: pointer;  /* Indicates the task is interactive */
+    display: flex;  /* Flex layout to position checkbox, text, and delete button */
+    align-items: center;  /* Vertically center the task contents */
+    justify-content: space-between;  /* Separate the three items (checkbox, text, delete button) */
+}
+
+/* Hover effect */
+#task-list li:hover {
+    transform: translateY(-5px);  /* Lift the task slightly on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);  /* Increase the shadow for a lifted effect */
+}
+
+/* Add an additional effect for active state (e.g., while clicking) */
+#task-list li:active {
+    transform: translateY(0);  /* Push the task back down */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* Revert to the original shadow */
+}
+
+.task-check {
+    margin-right: 15px;  /* Space between checkbox and text */
+}
+
+.task-text {
+    flex-grow: 1;  /* Allow text to take up remaining space */
+    text-align: center;  /* Center the task text */
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 15px;  /* Space between text and delete button */
 }
 
 .delete-btn {
