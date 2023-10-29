@@ -3,7 +3,9 @@ body, html {
     padding: 0;
     font-family: Arial, sans-serif;
 }
-
+#game-screen {
+    display: none;
+}
 .navbar {
     position: sticky;
     top: 0;
@@ -27,18 +29,60 @@ body, html {
 }
 
 .content {
-    padding: 20px;
-    transition: transform 0.5s ease; /* Smooth sliding transition */
-    transform: translateX(0%); /* Starts with Tasks section */
-    display: flex; /* Makes the screens sit side by side */
-    overflow-x: hidden; /* Hide horizontal overflow */
-    width: 100vw; /* Make the content area as wide as the viewport */
+    /* ... existing styles ... */
+    flex-direction: column;  /* Add this line to stack children vertically */
+}
+
+.seed-counter {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    color: #4CAF50;  /* Green shade for seeds */
+    width: 100vw;    /* Ensure it stretches across the full viewport width */
+    order: -1;       /* Ensure it always stays at the top inside the content */
 }
 
 .screen {
-    min-width: 100vw; /* Each screen takes up the full viewport width */
+    min-width: 100vw;
 }
 
-.screen.active {
-    display: block;
+.add-task {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#task-list {
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+#task-list li {
+    padding: 10px;
+}
+.delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    margin-left: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.start-new-day {
+    background-color: #FFD700; /* Gold */
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.start-new-day:hover {
+    background-color: #FFEC40;
 }

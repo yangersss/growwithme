@@ -15,18 +15,53 @@
         <button onclick="toggleEnvironment('game-screen')">Game</button>
     </div>
 
+    <!-- Seed Counter -->
+    <div class="seed-counter">
+        <span id="seed-count">0</span> Seeds
+    </div>
+
     <!-- Content Area -->
     <div class="content">
         <!-- Task Screen -->
         <div class="screen" id="task-screen">
-            <!-- Task content goes here -->
             <h2>Your Tasks</h2>
+
+            <!-- Add Task -->
+            <div class="add-task">
+                <input type="text" id="task-input" placeholder="Enter your task...">
+                <input type="number" id="seed-input" placeholder="Seeds" min="-7" max="7">
+                <button onclick="addTask()">Add Task</button>
+            </div>
+            <button class="start-new-day" onclick="startNewDay()">Start a New Day</button>
+            <!-- List of Tasks -->
+            <ul id="task-list">
+            </ul>
         </div>
 
-        <!-- Game Screen -->
         <div class="screen" id="game-screen">
-            <!-- Game content goes here -->
             <h2>Welcome to the Game!</h2>
+        
+            <!-- Game Tabs -->
+            <div class="game-tabs">
+                <button onclick="toggleGameTab('plant-shop')">Plant Shop</button>
+                <button onclick="toggleGameTab('garden')">Garden</button>
+                <button onclick="toggleGameTab('factories')">Factories</button>
+            </div>
+        
+            <!-- Plant Shop Tab Content -->
+            <div class="tab-content" id="plant-shop">
+                <!-- Display available plants for purchase here -->
+            </div>
+        
+            <!-- Garden Tab Content -->
+            <div class="tab-content" id="garden">
+                <!-- Display user's plants here -->
+            </div>
+        
+            <!-- Factories Tab Content -->
+            <div class="tab-content" id="factories">
+                <!-- Display user's factories here -->
+            </div>
         </div>
     </div>
 
